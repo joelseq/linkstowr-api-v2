@@ -23,6 +23,11 @@ clean:
 	@echo "Cleaning..."
 	@rm -f main
 
+# Generate SQL code
+db:
+	@echo "Running sqlc..."
+	@sqlc generate
+
 # Live Reload
 watch:
 	@if command -v air > /dev/null; then \
@@ -40,4 +45,4 @@ watch:
             fi; \
         fi
 
-.PHONY: all build run test clean watch
+.PHONY: all build run test clean db watch

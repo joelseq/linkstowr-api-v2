@@ -9,12 +9,17 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/sqlite3"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/joho/godotenv/autoload"
 	_ "github.com/mattn/go-sqlite3"
 )
 
 // Service represents a service that interacts with a database.
 type Service interface {
+	GetDB() *sql.DB
+
 	// Health returns a map of health status information.
 	// The keys and values in the map are service-specific.
 	Health() map[string]string
@@ -22,6 +27,9 @@ type Service interface {
 	// Close terminates the database connection.
 	// It returns an error if the connection cannot be closed.
 	Close() error
+
+	// Applies database migrations.
+	RunMigrations() error
 }
 
 type service struct {
@@ -50,6 +58,33 @@ func New() Service {
 		db: db,
 	}
 	return dbInstance
+}
+
+func (s *service) GetDB() *sql.DB {
+	if s.db == nil {
+		log.Fatal("Database connection is not initialized")
+	}
+	return s.db
+}
+
+func (s *service) RunMigrations() error {
+	driver, err := sqlite3.WithInstance(s.db, &sqlite3.Config{})
+	if err != nil {
+		return err
+	}
+
+	m, err := migrate.NewWithDatabaseInstance(
+		"file://db/migrations",
+		"sqlite3", driver)
+	if err != nil {
+		return err
+	}
+
+	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+		return err
+	}
+
+	return nil
 }
 
 // Health checks the health of the database connection by pinging the database.

@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -10,20 +11,30 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 
 	"linkstowr/internal/database"
+	"linkstowr/internal/repository"
 )
 
 type Server struct {
 	port int
 
 	db database.Service
+
+	repository *repository.Queries
 }
 
 func NewServer() *http.Server {
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
+	db := database.New()
+	if err := db.RunMigrations(); err != nil {
+		log.Fatal(err)
+	}
+
 	NewServer := &Server{
 		port: port,
 
 		db: database.New(),
+
+		repository: repository.New(db.GetDB()),
 	}
 
 	// Declare Server config
