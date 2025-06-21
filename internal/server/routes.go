@@ -47,11 +47,15 @@ func (s *Server) RegisterRoutes() http.Handler {
 	api := e.Group("/api")
 	api.Use(auth.GetMiddleware(s.repository))
 
+	// Token routes
 	api.GET("/tokens", s.listTokensHandler)
 	api.POST("/tokens", s.createTokenHandler)
 	api.DELETE("/tokens/:id", s.deleteTokenHandler)
 
-	// TODO: Link routes
+	// Link routes
+	api.GET("/links", s.listLinksHandler)
+	api.POST("/links", s.createLinkHandler)
+	api.POST("/links/clear", s.clearLinksHandler)
 
 	return e
 }
