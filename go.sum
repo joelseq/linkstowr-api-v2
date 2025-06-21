@@ -1,3 +1,5 @@
+github.com/akamensky/base58 v0.0.0-20210829145138-ce8bf8802e8f h1:z8MkSJCUyTmW5YQlxsMLBlwA7GmjxC7L4ooicxqnhz8=
+github.com/akamensky/base58 v0.0.0-20210829145138-ce8bf8802e8f/go.mod h1:UdUwYgAXBiL+kLfcqxoQJYkHA/vl937/PbFhZM34aZs=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -26,6 +28,8 @@ github.com/hashicorp/go-multierror v1.1.1 h1:H5DkEtf6CXdFp0N0Em5UCwQpXMWke8IA0+l
 github.com/hashicorp/go-multierror v1.1.1/go.mod h1:iw975J/qwKPdAO1clOe2L8331t/9/fmwbPZ6JB6eMoM=
 github.com/joelseq/sqliteadmin-go v0.2.0 h1:7HocU3C2bz5PbiVoN5KGXiKweljLvtvhPxJvIEnp0is=
 github.com/joelseq/sqliteadmin-go v0.2.0/go.mod h1:/87jLHzHDvfNRpPkaDl1S1lhoBXGZLPKQ+U70rALDA4=
+github.com/joemiller/prefixed-api-key v0.0.0-20240403234421-016e9aa2026f h1:MITpmM9wr8NwinwFMWrsSsyVBW2hxzBIhjSTTaUvlro=
+github.com/joemiller/prefixed-api-key v0.0.0-20240403234421-016e9aa2026f/go.mod h1:IfTros0wK/la7CgcI7EgZ/GYJAcq5hA1vuM1OQ4Eee8=
 github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
 github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
 github.com/labstack/echo/v4 v4.13.4 h1:oTZZW+T3s9gAu5L8vmzihV7/lkXGZuITzTQkTEhcXEA=

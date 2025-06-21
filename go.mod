@@ -7,6 +7,7 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/golang-migrate/migrate/v4 v4.18.3
 	github.com/joelseq/sqliteadmin-go v0.2.0
+	github.com/joemiller/prefixed-api-key v0.0.0-20240403234421-016e9aa2026f
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.13.4
 	github.com/mattn/go-sqlite3 v1.14.28
@@ -15,6 +16,7 @@ require (
 )
 
 require (
+	github.com/akamensky/base58 v0.0.0-20210829145138-ce8bf8802e8f // indirect
 	github.com/gabriel-vasile/mimetype v1.4.8 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect

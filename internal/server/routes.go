@@ -41,6 +41,15 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.POST("/signin", s.signinHandler)
 	e.GET("/me", s.meHandler)
 
+	// API routes
+	api := e.Group("/api")
+
+	api.GET("/tokens", s.listTokensHandler)
+	api.POST("/tokens", s.createTokenHandler)
+	api.DELETE("/tokens/:id", s.deleteTokenHandler)
+
+	// TODO: Link routes
+
 	return e
 }
 
