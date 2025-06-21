@@ -111,24 +111,14 @@ func (q *Queries) DeleteToken(ctx context.Context, arg DeleteTokenParams) error 
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, username FROM users
-WHERE username = ? AND password = ?
+SELECT id, username, password FROM users
+WHERE username = ?
 `
 
-type GetUserParams struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-type GetUserRow struct {
-	ID       int64  `json:"id"`
-	Username string `json:"username"`
-}
-
-func (q *Queries) GetUser(ctx context.Context, arg GetUserParams) (GetUserRow, error) {
-	row := q.db.QueryRowContext(ctx, getUser, arg.Username, arg.Password)
-	var i GetUserRow
-	err := row.Scan(&i.ID, &i.Username)
+func (q *Queries) GetUser(ctx context.Context, username string) (User, error) {
+	row := q.db.QueryRowContext(ctx, getUser, username)
+	var i User
+	err := row.Scan(&i.ID, &i.Username, &i.Password)
 	return i, err
 }
 

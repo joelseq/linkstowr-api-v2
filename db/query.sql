@@ -4,8 +4,8 @@ VALUES (?, ?)
 RETURNING id, username;
 
 -- name: GetUser :one
-SELECT id, username FROM users
-WHERE username = ? AND password = ?;
+SELECT id, username, password FROM users
+WHERE username = ?;
 
 -- name: CreateToken :exec
 INSERT INTO tokens (token_hash, name, short_token, user_id)

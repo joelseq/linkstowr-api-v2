@@ -36,6 +36,11 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.GET("/health", s.healthHandler)
 	e.POST("/admin", wrappedHandler(admin.HandlePost))
 
+	// Auth routes
+	e.POST("/signup", s.signupHandler)
+	e.POST("/signin", s.signinHandler)
+	e.GET("/me", s.meHandler)
+
 	return e
 }
 
