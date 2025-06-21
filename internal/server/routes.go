@@ -8,6 +8,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	prettylogger "github.com/rdbell/echo-pretty-logger"
+
+	"linkstowr/internal/auth"
 )
 
 func (s *Server) RegisterRoutes() http.Handler {
@@ -43,6 +45,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	// API routes
 	api := e.Group("/api")
+	api.Use(auth.GetMiddleware(s.repository))
 
 	api.GET("/tokens", s.listTokensHandler)
 	api.POST("/tokens", s.createTokenHandler)

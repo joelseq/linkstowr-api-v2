@@ -3,14 +3,21 @@ package auth
 import (
 	"crypto/rand"
 	"crypto/subtle"
+	"database/sql"
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
+	"linkstowr/internal/repository"
+
 	"github.com/golang-jwt/jwt/v5"
+	apikey "github.com/joemiller/prefixed-api-key"
+	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/argon2"
 )
 
@@ -121,6 +128,56 @@ func GetJWTEncodingSecret() string {
 		panic("JWT_ENCODING_SECRET environment variable is not set")
 	}
 	return secret
+}
+
+func GetMiddleware(repository *repository.Queries) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			authHeader := c.Request().Header.Get("Authorization")
+			tokenHeader := c.Request().Header.Get("X-Api-Token")
+			if authHeader == "" && tokenHeader == "" {
+				return echo.NewHTTPError(http.StatusUnauthorized, "Authorization or X-Api-Token header is required")
+			}
+
+			if authHeader != "" {
+				if !strings.HasPrefix(authHeader, "Bearer ") {
+					return echo.NewHTTPError(http.StatusUnauthorized, "Authorization header must start with 'Bearer '")
+				}
+
+				tokenString := strings.TrimPrefix(authHeader, "Bearer ")
+				if tokenString == "" {
+					return echo.NewHTTPError(http.StatusUnauthorized, "Token is required")
+				}
+
+				claims, err := DecodeJWT(tokenString)
+				if err != nil {
+					return echo.NewHTTPError(http.StatusUnauthorized, "Invalid token: "+err.Error())
+				}
+
+				fmt.Printf("Authenticated user: %s (ID: %s)\n", claims.Username, claims.Subject)
+
+				c.Set("userID", claims.Subject)
+			} else {
+				// Handle X-Api-Token authentication
+				key, err := apikey.ParseAPIKey(tokenHeader)
+				if err != nil {
+					return echo.NewHTTPError(http.StatusUnauthorized, "Invalid API token format")
+				}
+
+				row, err := repository.GetToken(c.Request().Context(), key.LongTokenHash())
+				if err != nil {
+					if err == sql.ErrNoRows {
+						return echo.NewHTTPError(http.StatusUnauthorized, "Invalid API token")
+					}
+					return err
+				}
+
+				c.Set("userID", strconv.FormatInt(row.UserID, 10))
+			}
+
+			return next(c)
+		}
+	}
 }
 
 func generateRandomBytes(n uint32) ([]byte, error) {

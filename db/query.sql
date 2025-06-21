@@ -11,6 +11,10 @@ WHERE username = ?;
 INSERT INTO tokens (token_hash, name, short_token, user_id)
 VALUES (?, ?, ?, ?);
 
+-- name: GetToken :one
+SELECT id, name, user_id FROM tokens
+WHERE token_hash = ?;
+
 -- name: ListTokens :many
 SELECT id, name, short_token FROM tokens
 WHERE user_id = ?;

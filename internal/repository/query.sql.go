@@ -110,6 +110,24 @@ func (q *Queries) DeleteToken(ctx context.Context, arg DeleteTokenParams) error 
 	return err
 }
 
+const getToken = `-- name: GetToken :one
+SELECT id, name, user_id FROM tokens
+WHERE token_hash = ?
+`
+
+type GetTokenRow struct {
+	ID     int64  `json:"id"`
+	Name   string `json:"name"`
+	UserID int64  `json:"user_id"`
+}
+
+func (q *Queries) GetToken(ctx context.Context, tokenHash string) (GetTokenRow, error) {
+	row := q.db.QueryRowContext(ctx, getToken, tokenHash)
+	var i GetTokenRow
+	err := row.Scan(&i.ID, &i.Name, &i.UserID)
+	return i, err
+}
+
 const getUser = `-- name: GetUser :one
 SELECT id, username, password FROM users
 WHERE username = ?
