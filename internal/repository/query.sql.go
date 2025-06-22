@@ -8,6 +8,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
 const clearLinks = `-- name: ClearLinks :exec
@@ -149,7 +150,7 @@ type ListLinksRow struct {
 	Url          string         `json:"url"`
 	Title        string         `json:"title"`
 	Note         sql.NullString `json:"note"`
-	BookmarkedAt sql.NullTime   `json:"bookmarked_at"`
+	BookmarkedAt time.Time      `json:"bookmarked_at"`
 }
 
 func (q *Queries) ListLinks(ctx context.Context, userID int64) ([]ListLinksRow, error) {

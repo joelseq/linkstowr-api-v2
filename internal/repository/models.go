@@ -6,6 +6,7 @@ package repository
 
 import (
 	"database/sql"
+	"time"
 )
 
 type Link struct {
@@ -14,7 +15,7 @@ type Link struct {
 	Title        string         `json:"title"`
 	Note         sql.NullString `json:"note"`
 	UserID       int64          `json:"user_id"`
-	BookmarkedAt sql.NullTime   `json:"bookmarked_at"`
+	BookmarkedAt time.Time      `json:"bookmarked_at"`
 }
 
 type Token struct {
