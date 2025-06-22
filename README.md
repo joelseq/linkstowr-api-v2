@@ -1,6 +1,6 @@
-# Project linkstowr
+# LinkStowr API
 
-One Paragraph of project description goes here
+API for the [LinkStowr obsidian plugin](https://github.com/joelseq/obsidian-linkstowr), [web app](https://github.com/joelseq/linkstowr-web), and [chrome extension](https://github.com/joelseq/linkstowr-extension).
 
 ## Getting Started
 
@@ -9,31 +9,43 @@ These instructions will get you a copy of the project up and running on your loc
 ## MakeFile
 
 Run build make command with tests
+
 ```bash
 make all
 ```
 
 Build the application
+
 ```bash
 make build
 ```
 
 Run the application
+
 ```bash
 make run
 ```
 
 Live reload the application:
+
 ```bash
 make watch
 ```
 
+Run sqlc to generate Go code from the schema and query:
+
+```bash
+make db
+```
+
 Run the test suite:
+
 ```bash
 make test
 ```
 
 Clean up binary from the last build:
+
 ```bash
 make clean
 ```
