@@ -52,7 +52,7 @@ RUN apk --update add \
 #     appuser
 # USER appuser
 
-COPY migrations /migrations
+COPY db/migrations /db/migrations
 
 # Copy the executable from the "build" stage.
 COPY --from=build /bin/server /bin/
