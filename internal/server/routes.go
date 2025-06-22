@@ -10,6 +10,7 @@ import (
 	prettylogger "github.com/rdbell/echo-pretty-logger"
 
 	"linkstowr/internal/auth"
+	"linkstowr/internal/backfill"
 )
 
 func (s *Server) RegisterRoutes() http.Handler {
@@ -43,6 +44,16 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.POST("/signin", s.signinHandler)
 	e.GET("/me", s.meHandler)
 
+	// Backfill
+	backfillGroup := e.Group("/backfill")
+	backfillGroup.Use(middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
+		if username == os.Getenv("BACKFILL_USERNAME") && password == os.Getenv("BACKFILL_PASSWORD") {
+			return true, nil
+		}
+		return false, nil
+	}))
+	backfillGroup.POST("/run", s.backfillHandler)
+
 	// API routes
 	api := e.Group("/api")
 	api.Use(auth.GetMiddleware(s.repository))
@@ -70,6 +81,14 @@ func (s *Server) HelloWorldHandler(c echo.Context) error {
 
 func (s *Server) healthHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, s.db.Health())
+}
+
+func (s *Server) backfillHandler(c echo.Context) error {
+	err := backfill.Run(c.Request().Context(), s.db.GetDB())
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+	return c.JSON(http.StatusOK, map[string]string{"message": "Backfill completed successfully"})
 }
 
 func wrappedHandler(handlerFunc func(w http.ResponseWriter, r *http.Request)) echo.HandlerFunc {
