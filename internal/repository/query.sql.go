@@ -22,8 +22,8 @@ func (q *Queries) ClearLinks(ctx context.Context, userID int64) error {
 }
 
 const createLink = `-- name: CreateLink :one
-INSERT INTO links (url, title, note, user_id)
-VALUES (?, ?, ?, ?)
+INSERT INTO links (url, title, note, user_id, tags)
+VALUES (?, ?, ?, ?, ?)
 RETURNING id, url
 `
 
@@ -32,6 +32,7 @@ type CreateLinkParams struct {
 	Title  string         `json:"title"`
 	Note   sql.NullString `json:"note"`
 	UserID int64          `json:"user_id"`
+	Tags   sql.NullString `json:"tags"`
 }
 
 type CreateLinkRow struct {
@@ -45,6 +46,7 @@ func (q *Queries) CreateLink(ctx context.Context, arg CreateLinkParams) (CreateL
 		arg.Title,
 		arg.Note,
 		arg.UserID,
+		arg.Tags,
 	)
 	var i CreateLinkRow
 	err := row.Scan(&i.ID, &i.Url)
@@ -142,7 +144,7 @@ func (q *Queries) GetUser(ctx context.Context, username string) (User, error) {
 }
 
 const listLinks = `-- name: ListLinks :many
-SELECT url, title, note, bookmarked_at FROM links
+SELECT url, title, note, bookmarked_at, tags FROM links
 WHERE user_id = ?
 `
 
@@ -151,6 +153,7 @@ type ListLinksRow struct {
 	Title        string         `json:"title"`
 	Note         sql.NullString `json:"note"`
 	BookmarkedAt time.Time      `json:"bookmarked_at"`
+	Tags         sql.NullString `json:"tags"`
 }
 
 func (q *Queries) ListLinks(ctx context.Context, userID int64) ([]ListLinksRow, error) {
@@ -167,6 +170,7 @@ func (q *Queries) ListLinks(ctx context.Context, userID int64) ([]ListLinksRow, 
 			&i.Title,
 			&i.Note,
 			&i.BookmarkedAt,
+			&i.Tags,
 		); err != nil {
 			return nil, err
 		}

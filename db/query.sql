@@ -24,12 +24,12 @@ DELETE FROM tokens
 WHERE id = ? AND user_id = ?;
 
 -- name: CreateLink :one
-INSERT INTO links (url, title, note, user_id)
-VALUES (?, ?, ?, ?)
+INSERT INTO links (url, title, note, user_id, tags)
+VALUES (?, ?, ?, ?, ?)
 RETURNING id, url;
 
 -- name: ListLinks :many
-SELECT url, title, note, bookmarked_at FROM links
+SELECT url, title, note, bookmarked_at, tags FROM links
 WHERE user_id = ?;
 
 -- name: ClearLinks :exec

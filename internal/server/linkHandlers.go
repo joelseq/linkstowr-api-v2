@@ -17,6 +17,7 @@ type Link struct {
 	Title        string    `json:"title"`
 	Note         string    `json:"note"`
 	BookmarkedAt time.Time `json:"bookmarked_at"`
+	Tags         string    `json:"tags"`
 }
 
 func (s *Server) listLinksHandler(c echo.Context) error {
@@ -38,6 +39,7 @@ func (s *Server) listLinksHandler(c echo.Context) error {
 			Title:        link.Title,
 			Note:         link.Note.String,
 			BookmarkedAt: link.BookmarkedAt,
+			Tags:         link.Tags.String,
 		})
 	}
 
@@ -54,6 +56,7 @@ func (s *Server) createLinkHandler(c echo.Context) error {
 		URL   string `json:"url" validate:"required,url"`
 		Title string `json:"title" validate:"required"`
 		Note  string `json:"note"`
+		Tags  string `json:"tags"`
 	}
 
 	err = json.NewDecoder(c.Request().Body).Decode(&createLinkPayload)
@@ -71,7 +74,8 @@ func (s *Server) createLinkHandler(c echo.Context) error {
 		UserID: userID,
 		Url:    createLinkPayload.URL,
 		Title:  createLinkPayload.Title,
-		Note:   sql.NullString{String: createLinkPayload.Note, Valid: true},
+		Note:   sql.NullString{String: createLinkPayload.Note, Valid: createLinkPayload.Note != ""},
+		Tags:   sql.NullString{String: createLinkPayload.Tags, Valid: createLinkPayload.Tags != ""},
 	})
 	if err != nil {
 		return err

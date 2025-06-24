@@ -16,6 +16,7 @@ type Link struct {
 	Note         sql.NullString `json:"note"`
 	UserID       int64          `json:"user_id"`
 	BookmarkedAt time.Time      `json:"bookmarked_at"`
+	Tags         sql.NullString `json:"tags"`
 }
 
 type Token struct {
